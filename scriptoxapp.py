@@ -4,7 +4,7 @@ from PIL import Image
 
 # 1. Page Config
 st.set_page_config(page_title="Scriptox.ai", page_icon="📜")
-
+st.title("📜 Scriptox.ai")
 # 2. Secure Authentication
 if "GEMINI_API_KEY" in st.secrets:
     try:
