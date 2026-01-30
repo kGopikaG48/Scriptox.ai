@@ -4,7 +4,7 @@ from PIL import Image
 
 # 1. Page Config
 st.set_page_config(page_title="Scriptox.ai", page_icon="📜")
-st.title("📜 Scriptox.ai")
+
 # 2. Secure Authentication
 if "GEMINI_API_KEY" in st.secrets:
     try:
@@ -21,7 +21,7 @@ else:
     st.stop()
 
 # 3. UI Layout
-st.title("🧬 Scriptox.ai")
+st.title("📜 Scriptox.ai")
 st.write("Convert handwritten lab records to clean digital code.")
 
 img_file = st.file_uploader("Upload Lab Record Image", type=['jpg', 'png', 'jpeg'])
