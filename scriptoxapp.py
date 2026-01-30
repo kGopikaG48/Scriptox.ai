@@ -52,4 +52,4 @@ if img_file:
                     
             except Exception as e:
                 st.error(f"Synthesis Error: {e}")
-                st.info("Check if your API Key is active at aistudio.google.com")s
+                st.info("Check if your API Key is active at aistudio.google.com")
