@@ -2,45 +2,44 @@ import streamlit as st
 from google import genai
 from PIL import Image
 
-# 1. Initialize the Gemini Client
-# Using st.secrets keeps your API key hidden from GitHub
+# 1. Page Config
+st.set_page_config(page_title="Scriptox.ai", page_icon="🧬")
+
+# 2. Authentication
+# This pulls from your .streamlit/secrets.toml locally or Streamlit Cloud Secrets
 if "GEMINI_API_KEY" in st.secrets:
     client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
 else:
-    st.error("API Key not found in Streamlit Secrets!")
+    st.error("API Key not found!")
     st.stop()
 
-# 2. UI Layout
+# 3. UI
 st.title("🧬 Scriptox.ai")
-st.markdown("### *Handwriting-to-Digital Logic Synthesis*")
+st.write("Turn handwritten lab records into digital code.")
 
-# 3. File Input
-img_file = st.file_uploader("Scan Lab Record", type=['jpg', 'png', 'jpeg'])
-lang = st.selectbox("Select Target Language", ["C", "Java", "Python", "C++"])
+img_file = st.file_uploader("Upload image", type=['jpg', 'png', 'jpeg'])
+lang = st.selectbox("Language", ["C", "Java", "Python", "C++"])
 
-# 4. Processing Logic
 if img_file:
-    # Convert uploaded file to PIL Image for the SDK
-    raw_img = Image.open(img_file)
-    st.image(raw_img, caption="Script Captured", use_container_width=True)
+    img = Image.open(img_file)
+    st.image(img, caption="Captured Script")
     
-    if st.button("Synthesize Code ✨"):
-        with st.spinner(f"Gemini 1.5 Flash is analyzing {lang} syntax..."):
+    if st.button("Synthesize ✨"):
+        with st.spinner("Analyzing..."):
             try:
-                # The Gemini 1.5 Flash Multimodal Call
+                # Use 'gemini-1.5-flash' - the modern string for the new SDK
                 response = client.models.generate_content(
                     model='gemini-1.5-flash',
                     contents=[
-                        f"Identify and OCR the handwritten {lang} code in this image. "
-                        f"Correct any syntax errors and return ONLY the code block.",
-                        raw_img
+                        f"Extract the handwritten {lang} code. Fix syntax. Return ONLY code.", 
+                        img
                     ]
                 )
                 
-                # 5. Display Result
-                st.subheader("✅ Synthesized Output:")
+                # Display output
+                st.subheader("✅ Digital Output:")
                 st.code(response.text, language=lang.lower())
-                st.balloons()
                 
             except Exception as e:
-                st.error(f"Error during synthesis: {e}")
+                st.error(f"Error: {e}")
+                st.info("Tip: Try checking if your API key is active in Google AI Studio.")
